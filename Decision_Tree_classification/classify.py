@@ -51,12 +51,12 @@ class Classifier():
     
     def logistic_regression(self):
         from sklearn.linear_model import LogisticRegression
-        classifier = LogisticRegression(random_state = 0,solver = 'newton-cg')
-        classifier.fit(self.X_train, self.y_train)
+        self.classifier = LogisticRegression(random_state = 0,solver = 'newton-cg')
+        self.classifier.fit(self.X_train, self.y_train)
 
         # Predicting the Test set results
-        self.y_pred_test = classifier.predict(self.X_test)
-        self.y_pred_train = classifier.predict(self.X_train)
+        self.y_pred_test = self.classifier.predict(self.X_test)
+        self.y_pred_train = self.classifier.predict(self.X_train)
 
         # Making the Confusion Matrix
         from sklearn.metrics import confusion_matrix
@@ -65,22 +65,23 @@ class Classifier():
         
         print (self.cm_test)
         print (self.cm_train)
+        print (self.classifier.predict_proba(self.X_test),self.classifier.predict(self.X_test))
     
     def decision_tree(self):
         from sklearn.tree import DecisionTreeClassifier
         from sklearn.metrics import confusion_matrix
-        classifier = DecisionTreeClassifier(criterion = 'entropy', random_state = 0)
-        classifier.fit(self.X_train, self.y_train)
+        self.classifier = DecisionTreeClassifier(criterion = 'entropy', random_state = 0)
+        self.classifier.fit(self.X_train, self.y_train)
     
         #Now get the default depth
-        depth = classifier.get_depth()
+        depth = self.classifier.get_depth()
         accuracy = []
     
         for i1 in range(3,depth+1):
-            classifier = DecisionTreeClassifier(criterion = 'entropy', random_state = 0,max_depth = i1)
-            classifier.fit(self.X_train,self.y_train)
-            y_train_pred = classifier.predict(self.X_train)
-            y_test_pred = classifier.predict(self.X_test)
+            self.classifier = DecisionTreeClassifier(criterion = 'entropy', random_state = 0,max_depth = i1)
+            self.classifier.fit(self.X_train,self.y_train)
+            y_train_pred = self.classifier.predict(self.X_train)
+            y_test_pred = self.classifier.predict(self.X_test)
             cm_train = confusion_matrix(self.y_train,y_train_pred)
             cm_test = confusion_matrix(self.y_test,y_test_pred)
             accuracy.append([i1,np.trace(cm_train)*100/len(self.y_train),np.trace(cm_test)*100/len(self.y_test)])
@@ -121,4 +122,4 @@ y = dataset.iloc[:, 8].values
 #logistic_regression_classification(X,y)
 cl = Classifier(X_data = X, Y_data = y, training_size = 0.25, feature_scaling = True)
 cl.pre_process()
-cl.decision_tree()
+cl.logistic_regression()

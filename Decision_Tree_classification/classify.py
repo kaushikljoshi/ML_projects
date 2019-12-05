@@ -39,7 +39,7 @@ class Classifier():
     def pre_process(self):
         #first split the data into training set and test set
         from sklearn.model_selection import train_test_split
-        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size = self.training_size, random_state = 0)
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, self.y, test_size = self.training_size, random_state = 0)
         
         #Apply feature scale if requested by user
         if (self.feature_scaling):
